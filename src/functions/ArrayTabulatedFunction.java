@@ -5,6 +5,17 @@ public class ArrayTabulatedFunction implements TabulatedFunction
 	private FunctionPoint[] points;
 	private int numberofpoints = 0;
 
+	public ArrayTabulatedFunction(double[] xValues, double[] yValues)
+	{
+		points = new FunctionPoint[xValues.length];
+		numberofpoints = xValues.length;
+
+		for (int i = 0; i < xValues.length; i++)
+		{
+			points[i] = new FunctionPoint(xValues[i], yValues[i]);
+		}
+	}
+
 	public ArrayTabulatedFunction(double leftX, double rightX, int pointsCount, Function function)
 	{
 		if (leftX >= rightX || pointsCount < 2)

@@ -1,19 +1,45 @@
 import functions.*;
+import functions.basic.*;
+import java.io.*;
+import functions.TabulatedFunction;
+import functions.TabulatedFunctions;
 
 public class Main
 {
 	public static void main(String[] args) throws InappropriateFunctionPointException
 	{
-		FunctionPoint[] values = {
-				new FunctionPoint(1, 2),
-				new FunctionPoint(2, 4),
-				new FunctionPoint(3, 67)
-		};
-		TabulatedFunction a = new LinkedListTabulatedFunction(values);
+		// Создание табулированного аналога логарифма
+		double leftX = 0.0;
+		double rightX = 10.0;
+		int pointsCount = 11;
+		Log a = new Log(2.72);
 
-		printFunctionValues(a);
+		TabulatedFunction logTabulated = TabulatedFunctions.tabulate(a, leftX + 1, rightX + 1, pointsCount);
 
+		// Запись в файл
+		try (FileOutputStream fos = new FileOutputStream("logTabulated.txt"))
+		{
+			TabulatedFunctions.outputTabulatedFunction(logTabulated, fos);
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 
+		// Чтение из файла и сравнение значений
+		try (FileInputStream fis = new FileInputStream("logTabulated.txt"))
+		{
+			TabulatedFunction logTabulatedFromFile = TabulatedFunctions.inputTabulatedFunction(fis);
+
+			double step = 1.0;
+			for (double x = leftX; x <= rightX; x += step)
+			{
+				System.out.println("Original: " + logTabulated.getFunctionValue(x) +
+						", Read from file: " + logTabulatedFromFile.getFunctionValue(x));
+			}
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public static void printFunctionValues(TabulatedFunction function) // функция для вывода значений функции
