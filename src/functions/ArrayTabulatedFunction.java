@@ -1,6 +1,8 @@
 package functions;
+import java.io.Serializable;
+import java.io.*;
 
-public class ArrayTabulatedFunction implements TabulatedFunction
+public class ArrayTabulatedFunction implements TabulatedFunction, Serializable
 {
 	private FunctionPoint[] points;
 	private int numberofpoints = 0;
@@ -119,10 +121,10 @@ public class ArrayTabulatedFunction implements TabulatedFunction
 
 	public double getFunctionValue(double x)
 	{
-		if (x < getLeftDomainBorder() || x > getRightDomainBorder())
+		/*if (x < getLeftDomainBorder() || x > getRightDomainBorder())
 		{
 			throw new FunctionPointIndexOutOfBoundsException();
-		}
+		}*/
 
 		for (int i = 1; i < points.length; i++)
 		{
