@@ -1,5 +1,7 @@
 package functions;
 
+import java.io.Serializable;
+
 public interface TabulatedFunction extends Function
 {
 	int getPointsCount();

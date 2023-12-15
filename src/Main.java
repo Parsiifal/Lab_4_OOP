@@ -8,38 +8,37 @@ public class Main
 {
 	public static void main(String[] args) throws InappropriateFunctionPointException
 	{
-		// Создание табулированного аналога логарифма
-		double leftX = 0.0;
-		double rightX = 10.0;
-		int pointsCount = 11;
-		Log a = new Log(2.72);
+		Tan tan = new Tan();
 
-		TabulatedFunction logTabulated = TabulatedFunctions.tabulate(a, leftX + 1, rightX + 1, pointsCount);
+		TabulatedFunction func = TabulatedFunctions.tabulate(tan, 0, 6.28, 11);
 
-		// Запись в файл
-		try (FileOutputStream fos = new FileOutputStream("logTabulated.txt"))
+		try
 		{
-			TabulatedFunctions.outputTabulatedFunction(logTabulated, fos);
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+			FileOutputStream fos = new FileOutputStream("file.txt");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-		// Чтение из файла и сравнение значений
-		try (FileInputStream fis = new FileInputStream("logTabulated.txt"))
-		{
-			TabulatedFunction logTabulatedFromFile = TabulatedFunctions.inputTabulatedFunction(fis);
+			oos.writeObject(func);
+			oos.close();
 
-			double step = 1.0;
-			for (double x = leftX; x <= rightX; x += step)
+			FileInputStream fis = new FileInputStream("file.txt");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+
+			TabulatedFunction fromfile = (TabulatedFunction) ois.readObject();
+			ois.close();
+
+			for(double i = 0; i <= 6.28; i += 0.1)
 			{
-				System.out.println("Original: " + logTabulated.getFunctionValue(x) +
-						", Read from file: " + logTabulatedFromFile.getFunctionValue(x));
+				if(func.getFunctionValue(i) != fromfile.getFunctionValue(i)) System.out.println("Не равны");
 			}
-		} catch (IOException e)
+
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
 		}
+
 	}
 
 	public static void printFunctionValues(TabulatedFunction function) // функция для вывода значений функции
